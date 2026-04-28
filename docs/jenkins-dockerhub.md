@@ -2,9 +2,9 @@
 
 The root `Jenkinsfile` builds and pushes three Docker Hub images:
 
-- `cithit/ot-plc-4`
-- `cithit/ot-rio-4`
-- `cithit/ot-hmi-4`
+- `cithit/ot-plc-5`
+- `cithit/ot-rio-5`
+- `cithit/ot-hmi-5`
 
 ## Jenkins Requirements
 
@@ -37,9 +37,9 @@ For each image, Jenkins publishes:
 Example:
 
 ```text
-cithit/ot-plc-4:latest
-cithit/ot-plc-4:main
-cithit/ot-plc-4:80f0a24abcd1
-cithit/ot-rio-4:latest
-cithit/ot-hmi-4:latest
+cithit/ot-plc-5:latest
+cithit/ot-plc-5:main
+cithit/ot-plc-5:80f0a24abcd1
+cithit/ot-rio-5:latest
+cithit/ot-hmi-5:latest
 ```
