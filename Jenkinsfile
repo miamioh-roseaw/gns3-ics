@@ -12,11 +12,6 @@ pipeline {
       defaultValue: 'miamioh-roseaw',
       description: 'Docker Hub username or organization that will receive the images'
     )
-    string(
-      name: 'DOCKERHUB_CREDENTIALS_ID',
-      defaultValue: 'dockerhub',
-      description: 'Jenkins username/password credential ID for Docker Hub'
-    )
     booleanParam(
       name: 'PUSH_LATEST',
       defaultValue: true,
@@ -25,6 +20,8 @@ pipeline {
   }
 
   environment {
+    DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
+    KUBECONFIG = credentials('roseaw-225')
     PLC_IMAGE = 'gns3-ot-plc-ladder'
     REMOTE_IO_IMAGE = 'gns3-ot-remote-io-panel'
   }
@@ -93,7 +90,7 @@ pipeline {
         script {
           withCredentials([
             usernamePassword(
-              credentialsId: params.DOCKERHUB_CREDENTIALS_ID,
+              credentialsId: env.DOCKER_CREDENTIALS_ID,
               usernameVariable: 'DOCKERHUB_USERNAME',
               passwordVariable: 'DOCKERHUB_PASSWORD'
             )

@@ -19,11 +19,16 @@ The Jenkins agent must have:
 Create a Jenkins credential:
 
 - Kind: `Username with password`
-- ID: `dockerhub`
+- ID: `roseaw-dockerhub`
 - Username: your Docker Hub username
 - Password: a Docker Hub access token
 
 Using an access token is preferred over storing your Docker Hub account password.
+
+The pipeline also loads this Jenkins credential for future Kubernetes deploy stages:
+
+- ID: `roseaw-225`
+- Exposed environment variable: `KUBECONFIG`
 
 ## Pipeline Parameters
 
@@ -36,14 +41,6 @@ miamioh-roseaw
 ```
 
 Change this if your Docker Hub namespace is different from your GitHub namespace.
-
-`DOCKERHUB_CREDENTIALS_ID`
-
-Jenkins credential ID used for `docker login`. The default is:
-
-```text
-dockerhub
-```
 
 `PUSH_LATEST`
 
