@@ -9,13 +9,16 @@ services:
       MODBUS_PORT: "5020"
       PLC_CONFIG: /config/plc.yaml
       IO_PANEL_URL: http://remote-io:8080/api/io
+      DHCP_ENABLED: "true"
     ports:
       - "5020:5020"
     volumes:
       - ./config:/config:ro
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
     networks:
-      ot_net:
-        ipv4_address: 10.10.10.20
+      - ot_net
 
   remote-io:
     build: ./io-panel
@@ -24,13 +27,16 @@ services:
     hostname: remote-io-panel
     environment:
       IO_CONFIG: /config/io-panel.yaml
+      DHCP_ENABLED: "true"
     ports:
       - "8080:8080"
     volumes:
       - ./config:/config
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
     networks:
-      ot_net:
-        ipv4_address: 10.10.10.30
+      - ot_net
 
   hmi:
     build: ./hmi
@@ -39,23 +45,23 @@ services:
     hostname: hmi-operator-panel
     environment:
       HMI_CONFIG: /config/hmi.yaml
-      HMI_IP: 10.10.10.40
-      PLC_HOST: 10.10.10.20
+      HMI_IP: dhcp
+      PLC_HOST: plc
       PLC_PORT: "5020"
       PLC_UNIT_ID: "1"
+      DHCP_ENABLED: "true"
     ports:
       - "8090:8090"
     volumes:
       - ./config:/config
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
     depends_on:
       - plc
     networks:
-      ot_net:
-        ipv4_address: 10.10.10.40
+      - ot_net
 
 networks:
   ot_net:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 10.10.10.0/24

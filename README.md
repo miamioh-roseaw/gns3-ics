@@ -107,7 +107,9 @@ Build each folder as a Docker appliance, or import this compose model into a hos
 - Remote I/O panel: TCP `8080`
 - HMI: TCP `8090`
 
-In a GNS3 topology, place Ignition on the same emulated segment or route to the PLC container address. Use `10.10.10.20:5020` if running with the included compose network.
+In a GNS3 topology, place the devices on a segment that has a DHCP server. Each appliance starts a DHCP client on `eth0` before launching its application. The HMI has fields for entering its displayed station IP and the PLC IP/host after leases are assigned.
+
+If no DHCP server responds, each container continues startup after the DHCP timeout and uses the address already present on the interface.
 
 ## Tuning the PLC Flavor
 

@@ -51,7 +51,7 @@ def default_config() -> dict[str, Any]:
     return {
         "hmi_type": "water",
         "hmi_ip": os.getenv("HMI_IP", local_ip()),
-        "plc_host": os.getenv("PLC_HOST", "10.10.10.20"),
+        "plc_host": os.getenv("PLC_HOST", "plc"),
         "plc_port": int(os.getenv("PLC_PORT", "5020")),
         "unit_id": int(os.getenv("PLC_UNIT_ID", "1")),
     }
@@ -63,7 +63,7 @@ def local_ip() -> str:
             sock.connect(("10.255.255.255", 1))
             return sock.getsockname()[0]
     except OSError:
-        return "10.10.10.40"
+        return "0.0.0.0"
 
 
 def load_config() -> dict[str, Any]:
@@ -72,8 +72,10 @@ def load_config() -> dict[str, Any]:
     with CONFIG_PATH.open("r", encoding="utf-8") as handle:
         config = yaml.safe_load(handle) or default_config()
     config.setdefault("hmi_type", "water")
-    config.setdefault("hmi_ip", local_ip())
-    config.setdefault("plc_host", "10.10.10.20")
+    config.setdefault("hmi_ip", os.getenv("HMI_IP", local_ip()))
+    if str(config["hmi_ip"]).lower() in {"", "auto", "dhcp"}:
+        config["hmi_ip"] = local_ip()
+    config.setdefault("plc_host", os.getenv("PLC_HOST", "plc"))
     config.setdefault("plc_port", 5020)
     config.setdefault("unit_id", 1)
     return config
