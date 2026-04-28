@@ -9,7 +9,7 @@ services:
       MODBUS_PORT: "5020"
       PLC_CONFIG: /config/plc.yaml
       IO_PANEL_URL: http://remote-io:8080/api/io
-      DHCP_ENABLED: "true"
+      STATIC_INTERFACE: eth0
     ports:
       - "5020:5020"
     volumes:
@@ -27,7 +27,7 @@ services:
     hostname: remote-io-panel
     environment:
       IO_CONFIG: /config/io-panel.yaml
-      DHCP_ENABLED: "true"
+      STATIC_INTERFACE: eth0
     ports:
       - "8080:8080"
     volumes:
@@ -45,11 +45,11 @@ services:
     hostname: hmi-operator-panel
     environment:
       HMI_CONFIG: /config/hmi.yaml
-      HMI_IP: dhcp
+      HMI_IP: static
       PLC_HOST: plc
       PLC_PORT: "5020"
       PLC_UNIT_ID: "1"
-      DHCP_ENABLED: "true"
+      STATIC_INTERFACE: eth0
     ports:
       - "8090:8090"
     volumes:

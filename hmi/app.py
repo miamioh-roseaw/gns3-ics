@@ -73,7 +73,7 @@ def load_config() -> dict[str, Any]:
         config = yaml.safe_load(handle) or default_config()
     config.setdefault("hmi_type", "water")
     config.setdefault("hmi_ip", os.getenv("HMI_IP", local_ip()))
-    if str(config["hmi_ip"]).lower() in {"", "auto", "dhcp"}:
+    if str(config["hmi_ip"]).lower() in {"", "auto", "static"}:
         config["hmi_ip"] = local_ip()
     config.setdefault("plc_host", os.getenv("PLC_HOST", "plc"))
     config.setdefault("plc_port", 5020)

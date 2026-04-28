@@ -107,18 +107,15 @@ Build each folder as a Docker appliance, or import this compose model into a hos
 - Remote I/O panel: TCP `8080`
 - HMI: TCP `8090`
 
-In a GNS3 topology, place the devices on a segment that has a DHCP server. Each appliance can start a DHCP client on `eth0` before launching its application. The HMI has fields for entering its displayed station IP and the PLC IP/host after leases are assigned.
-
-If an address already exists, the container keeps it unless `DHCP_FORCE=true` is set. If no DHCP server responds, each container continues startup after the DHCP timeout and uses the address already present on the interface.
-
-For static addressing from the appliance console, set:
+In a GNS3 topology, start each appliance with an interactive Docker console. The container asks for a static IP before starting the application:
 
 ```text
-STATIC_IP_PROMPT=true
-DHCP_ENABLED=false
+IP address with CIDR, example 192.168.10.20/24
+Default gateway, optional
+DNS server, optional
 ```
 
-The container will ask for an IP/CIDR, optional gateway, and optional DNS server before starting the app. This requires an interactive console/TTY in GNS3.
+If the container is started non-interactively, it keeps the current interface address and starts normally. You can also set `STATIC_IP_CIDR`, `STATIC_GATEWAY`, and `STATIC_DNS` in the template to avoid prompting.
 
 ## Tuning the PLC Flavor
 

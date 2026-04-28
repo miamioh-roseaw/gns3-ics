@@ -1,5 +1,5 @@
 hmi_type: water
-hmi_ip: dhcp
+hmi_ip: static
 plc_host: plc
 plc_port: 5020
 unit_id: 1
