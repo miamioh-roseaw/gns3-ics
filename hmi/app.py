@@ -1,6 +1,7 @@
 import os
 import socket
 import logging
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -62,10 +63,23 @@ def default_config() -> dict[str, Any]:
 
 
 def local_ip() -> str:
+    interface = os.getenv("STATIC_INTERFACE", "eth0")
+    try:
+        output = subprocess.check_output(
+            ["ip", "-4", "-o", "addr", "show", interface],
+            text=True,
+        )
+        for line in output.splitlines():
+            address = line.split()[3].split("/")[0]
+            if is_ipv4_address(address) and not address.startswith("127."):
+                return address
+    except (OSError, subprocess.CalledProcessError, IndexError):
+        pass
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             sock.connect(("10.255.255.255", 1))
-            return sock.getsockname()[0]
+            address = sock.getsockname()[0]
+            return address if is_ipv4_address(address) else "0.0.0.0"
     except OSError:
         return "0.0.0.0"
 
@@ -75,19 +89,23 @@ def is_ipv4_address(value: str) -> bool:
     return len(octets) == 4 and all(octet.isdigit() and 0 <= int(octet) <= 255 for octet in octets)
 
 
-def normalize_base_ip(value: str) -> str:
+def normalize_base_ip(value: str, fallback_ip: str = "") -> str:
     value = value.strip()
-    return value if is_ipv4_address(value) else local_ip()
+    if is_ipv4_address(value):
+        return value
+    if is_ipv4_address(fallback_ip):
+        return fallback_ip
+    return local_ip()
 
 
-def expand_last_octet(value: str, base_ip: str) -> str:
+def expand_last_octet(value: str, base_ip: str, fallback_ip: str = "") -> str:
     value = value.strip()
     if not value.isdigit():
         return value
     last_octet = int(value)
     if last_octet < 1 or last_octet > 254:
         return value
-    base_ip = normalize_base_ip(base_ip)
+    base_ip = normalize_base_ip(base_ip, fallback_ip)
     if not is_ipv4_address(base_ip):
         return value
     octets = base_ip.split(".")
@@ -190,12 +208,14 @@ def healthz():
 @app.post("/settings")
 def settings():
     config = load_config()
+    request_host = request.host.split(":", 1)[0]
     hmi_type = request.form.get("hmi_type", config["hmi_type"])
     config["hmi_type"] = hmi_type if hmi_type in HMI_TYPES else "water"
-    config["hmi_ip"] = normalize_base_ip(request.form.get("hmi_ip", config["hmi_ip"]))
+    config["hmi_ip"] = normalize_base_ip(request.form.get("hmi_ip", config["hmi_ip"]), request_host)
     config["plc_host"] = expand_last_octet(
         request.form.get("plc_host", config["plc_host"]),
         config["hmi_ip"],
+        request_host,
     )
     config["plc_port"] = int(request.form.get("plc_port", config["plc_port"]))
     config["unit_id"] = int(request.form.get("unit_id", config["unit_id"]))
