@@ -11,10 +11,41 @@
       <header class="topbar">
         <div>
           <h1>Remote I/O Panel</h1>
-          <p>Field device states feeding the simulated PLC scan.</p>
+          <p>Instructor controls for field device states feeding the simulated PLC scan.</p>
         </div>
         <a class="api" href="/api/io">JSON</a>
       </header>
+
+      <section class="instructor">
+        <div class="section-head">
+          <div>
+            <h2>Instructor Scenarios</h2>
+            <p>Active: {{ "Normal" if config.active_scenario == "normal" else config.active_scenario.replace("_", " ").title() }}</p>
+          </div>
+          <form action="/scenario/reset" method="post">
+            <button class="secondary" type="submit">Reset Normal</button>
+          </form>
+        </div>
+        <div class="scenario-grid">
+          {% for scenario_id, scenario in scenarios.items() %}
+          <form class="scenario {% if config.active_scenario == scenario_id %}active{% endif %}" action="/scenario/{{ scenario_id }}" method="post">
+            <div>
+              <strong>{{ scenario.label }}</strong>
+              <span>{{ scenario.severity }}</span>
+            </div>
+            <p>{{ scenario.description }}</p>
+            <button type="submit">Apply</button>
+          </form>
+          {% endfor %}
+        </div>
+      </section>
+
+      <div class="section-head compact">
+        <div>
+          <h2>Manual Inputs</h2>
+          <p>Override individual sensors and contacts during a scenario.</p>
+        </div>
+      </div>
 
       <section class="grid">
         {% for name, point in config.points.items() %}

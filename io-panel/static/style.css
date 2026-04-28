@@ -32,6 +32,7 @@ body {
 
 h1,
 h2,
+h3,
 p {
   margin: 0;
 }
@@ -44,6 +45,22 @@ h1 {
 p {
   margin-top: 6px;
   color: #aab9b0;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.section-head h2 {
+  font-size: 20px;
+}
+
+.section-head.compact {
+  margin-top: 24px;
 }
 
 .api,
@@ -122,6 +139,62 @@ button {
   margin-top: 14px;
 }
 
+.secondary {
+  width: auto;
+  margin: 0;
+  background: #26342f;
+  color: #eef3ef;
+}
+
+.instructor {
+  margin-top: 22px;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.scenario {
+  display: grid;
+  align-content: space-between;
+  min-height: 188px;
+  border: 1px solid #34473f;
+  border-radius: 8px;
+  background: #141d19;
+  padding: 14px;
+}
+
+.scenario.active {
+  border-color: #d7f5aa;
+  box-shadow: inset 0 0 0 1px #d7f5aa;
+}
+
+.scenario strong,
+.scenario span {
+  display: block;
+}
+
+.scenario strong {
+  font-size: 16px;
+}
+
+.scenario span {
+  margin-top: 4px;
+  color: #d7f5aa;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.scenario p {
+  min-height: 66px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 .add {
   display: grid;
   grid-template-columns: minmax(180px, 1fr) minmax(220px, 1fr) 140px;
@@ -135,12 +208,18 @@ button {
 
 @media (max-width: 680px) {
   .topbar,
+  .section-head,
   .add {
     grid-template-columns: 1fr;
     align-items: stretch;
   }
 
-  .topbar {
+  .topbar,
+  .section-head {
     display: grid;
+  }
+
+  .secondary {
+    width: 100%;
   }
 }

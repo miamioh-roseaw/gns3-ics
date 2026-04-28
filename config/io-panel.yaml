@@ -1,3 +1,4 @@
+active_scenario: normal
 points:
   pressure:
     device_type: pressure_sensor

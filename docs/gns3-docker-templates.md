@@ -61,6 +61,16 @@ unit id: 1
 
 Use the register map in the project `README.md`.
 
+## Instructor Panel
+
+Open the remote I/O panel in a browser:
+
+```text
+http://10.10.10.30:8080
+```
+
+The top section provides instructor scenarios that modify simulated field inputs. Use it to trigger conditions such as high ambient temperature, high water pressure, an open door interlock, or an e-stop trip while students watch PLC and SCADA behavior.
+
 ## Realistic Traffic Guidance
 
 For training, the simulator gives repeatable Modbus TCP traffic with a ladder scan loop and realistic register behavior. For traffic that closely resembles a specific PLC model, capture a baseline PCAP from that model and tune:

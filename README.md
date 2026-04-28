@@ -55,6 +55,19 @@ The remote I/O panel supports these selectable device types:
 - Float switch
 - Proximity sensor
 
+## Instructor Scenarios
+
+The remote I/O panel includes an instructor scenario area for injecting common process and safety issues during a lab. Presets currently include:
+
+- Ambient heat rise
+- Water pressure surge
+- Blocked outlet
+- Door interlock open
+- E-stop pressed
+- Pressure sensor failed low
+
+These presets update the same simulated field points read by the PLC, so Ignition will see the effect through Modbus TCP just like a manual sensor change.
+
 ## GNS3 Use
 
 Build each folder as a Docker appliance, or import this compose model into a host that GNS3 can reach. For GNS3 Docker templates, expose:
