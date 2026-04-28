@@ -7,11 +7,6 @@ pipeline {
   }
 
   parameters {
-    string(
-      name: 'DOCKERHUB_REPOSITORY',
-      defaultValue: 'cithit/gns3-ics',
-      description: 'Docker Hub repository that will receive the component-tagged images'
-    )
     booleanParam(
       name: 'PUSH_LATEST',
       defaultValue: true,
@@ -20,6 +15,7 @@ pipeline {
   }
 
   environment {
+    DOCKERHUB_REPOSITORY = 'cithit/gns3-ics'
     DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
     PLC_TAG_PREFIX = 'plc'
     REMOTE_IO_TAG_PREFIX = 'remote-io'

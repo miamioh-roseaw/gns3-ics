@@ -28,15 +28,13 @@ Using an access token is preferred over storing your Docker Hub account password
 
 ## Pipeline Parameters
 
-`DOCKERHUB_REPOSITORY`
-
-Docker Hub repository. The default is:
+The Docker Hub repository is set in the Jenkinsfile environment:
 
 ```text
 cithit/gns3-ics
 ```
 
-Change this only if the Docker Hub repository changes.
+Change `DOCKERHUB_REPOSITORY` in `Jenkinsfile` only if the Docker Hub repository changes.
 
 `PUSH_LATEST`
 
