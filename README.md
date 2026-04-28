@@ -107,9 +107,9 @@ Build each folder as a Docker appliance, or import this compose model into a hos
 - Remote I/O panel: TCP `8080`
 - HMI: TCP `8090`
 
-In a GNS3 topology, place the devices on a segment that has a DHCP server. Each appliance starts a DHCP client on `eth0` before launching its application. The HMI has fields for entering its displayed station IP and the PLC IP/host after leases are assigned.
+In a GNS3 topology, place the devices on a segment that has a DHCP server. Each appliance can start a DHCP client on `eth0` before launching its application. The HMI has fields for entering its displayed station IP and the PLC IP/host after leases are assigned.
 
-If no DHCP server responds, each container continues startup after the DHCP timeout and uses the address already present on the interface.
+If an address already exists, the container keeps it unless `DHCP_FORCE=true` is set. If no DHCP server responds, each container continues startup after the DHCP timeout and uses the address already present on the interface.
 
 ## Tuning the PLC Flavor
 

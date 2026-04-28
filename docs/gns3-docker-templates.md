@@ -28,6 +28,7 @@ PLC_CONFIG=/config/plc.yaml
 IO_PANEL_URL=http://<remote-io-dhcp-address>:8080/api/io
 DHCP_ENABLED=true
 DHCP_INTERFACE=eth0
+DHCP_FORCE=true
 DHCP_TIMEOUT=15
 ```
 
@@ -50,6 +51,7 @@ Environment variables:
 IO_CONFIG=/config/io-panel.yaml
 DHCP_ENABLED=true
 DHCP_INTERFACE=eth0
+DHCP_FORCE=true
 DHCP_TIMEOUT=15
 ```
 
@@ -76,6 +78,7 @@ PLC_PORT=5020
 PLC_UNIT_ID=1
 DHCP_ENABLED=true
 DHCP_INTERFACE=eth0
+DHCP_FORCE=true
 DHCP_TIMEOUT=15
 ```
 
@@ -115,7 +118,9 @@ Use the HMI type drop-down to switch between manufacturing, water, wastewater, a
 
 ## DHCP Notes
 
-Each image includes `dhclient` and requests an address on startup. Your GNS3 topology must include a DHCP server or router service on the same L2 segment. If your GNS3 Docker template supports Linux capabilities, allow `NET_ADMIN` and `NET_RAW` so the DHCP client can configure the interface.
+Each image includes `dhclient` and can request an address on startup. Your GNS3 topology must include a DHCP server or router service on the same L2 segment. If your GNS3 Docker template supports Linux capabilities, allow `NET_ADMIN` and `NET_RAW` so the DHCP client can configure the interface.
+
+For GNS3 templates, set `DHCP_FORCE=true` to request a lease even if the runtime pre-populates an address. For local Docker Compose, leave `DHCP_FORCE` unset so the containers keep their Docker-managed addresses and start immediately.
 
 ## Realistic Traffic Guidance
 
