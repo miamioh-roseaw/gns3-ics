@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Remote I/O Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Remote I/O Panel</h1>
+          <p>Field device states feeding the simulated PLC scan.</p>
+        </div>
+        <a class="api" href="/api/io">JSON</a>
+      </header>
+
+      <section class="grid">
+        {% for name, point in config.points.items() %}
+        {% set meta = device_types[point.device_type] %}
+        <form class="card" action="/point/{{ name }}" method="post">
+          <div class="card-head">
+            <h2>{{ name }}</h2>
+            <span>{{ meta.label }}</span>
+          </div>
+          <label>
+            Device
+            <select name="device_type">
+              {% for device_id, device in device_types.items() %}
+              <option value="{{ device_id }}" {% if device_id == point.device_type %}selected{% endif %}>{{ device.label }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          {% if meta.kind == "analog" %}
+          <label>
+            Value {{ meta.unit }}
+            <input name="value" type="number" step="0.1" min="{{ meta.min }}" max="{{ meta.max }}" value="{{ point.value }}">
+          </label>
+          {% else %}
+          <label class="switch">
+            <input name="value" type="checkbox" {% if point.value %}checked{% endif %}>
+            <span>{{ "Closed / Active" if point.value else "Open / Inactive" }}</span>
+          </label>
+          {% endif %}
+          <button type="submit">Update</button>
+        </form>
+        {% endfor %}
+      </section>
+
+      <form class="add" action="/point" method="post">
+        <input name="name" placeholder="new_point_name" required>
+        <select name="device_type">
+          {% for device_id, device in device_types.items() %}
+          <option value="{{ device_id }}">{{ device.label }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit">Add Point</button>
+      </form>
+    </main>
+  </body>
+</html>

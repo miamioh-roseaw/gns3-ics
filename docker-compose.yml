@@ -1,0 +1,40 @@
+services:
+  plc:
+    build: ./plc
+    image: gns3-ot-plc-ladder:latest
+    container_name: ot-plc-ladder
+    hostname: plc-compactlogix-sim
+    environment:
+      PLC_PROFILE: compactlogix_like
+      MODBUS_PORT: "5020"
+      PLC_CONFIG: /config/plc.yaml
+      IO_PANEL_URL: http://remote-io:8080/api/io
+    ports:
+      - "5020:5020"
+    volumes:
+      - ./config:/config:ro
+    networks:
+      ot_net:
+        ipv4_address: 10.10.10.20
+
+  remote-io:
+    build: ./io-panel
+    image: gns3-ot-remote-io-panel:latest
+    container_name: ot-remote-io-panel
+    hostname: remote-io-panel
+    environment:
+      IO_CONFIG: /config/io-panel.yaml
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/config
+    networks:
+      ot_net:
+        ipv4_address: 10.10.10.30
+
+networks:
+  ot_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24

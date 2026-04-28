@@ -1,0 +1,56 @@
+name: compactlogix_like_plc
+scan_ms: 100
+modbus_port: 5020
+
+# Modbus map uses zero-based addressing. Ignition often displays these as
+# 000001/100001/300001/400001 depending on the driver notation.
+points:
+  - name: pump_run_cmd
+    type: coil
+    address: 0
+    source: ladder
+  - name: alarm_active
+    type: coil
+    address: 1
+    source: ladder
+  - name: start_pb
+    type: discrete_input
+    address: 0
+    source: remote_io
+  - name: estop_ok
+    type: discrete_input
+    address: 1
+    source: remote_io
+  - name: door_closed
+    type: discrete_input
+    address: 2
+    source: remote_io
+  - name: tank_high
+    type: discrete_input
+    address: 3
+    source: remote_io
+  - name: pressure
+    type: input_register
+    address: 0
+    source: remote_io
+    scale: 10
+  - name: temperature
+    type: input_register
+    address: 1
+    source: remote_io
+    scale: 10
+
+ladder:
+  - name: seal_in_pump_run
+    contacts:
+      - name: start_pb
+      - name: estop_ok
+      - name: door_closed
+      - name: tank_high
+        normally_closed: true
+    coil: pump_run_cmd
+  - name: safety_alarm
+    contacts:
+      - name: estop_ok
+        normally_closed: true
+    coil: alarm_active
