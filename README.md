@@ -111,6 +111,15 @@ In a GNS3 topology, place the devices on a segment that has a DHCP server. Each 
 
 If an address already exists, the container keeps it unless `DHCP_FORCE=true` is set. If no DHCP server responds, each container continues startup after the DHCP timeout and uses the address already present on the interface.
 
+For static addressing from the appliance console, set:
+
+```text
+STATIC_IP_PROMPT=true
+DHCP_ENABLED=false
+```
+
+The container will ask for an IP/CIDR, optional gateway, and optional DNS server before starting the app. This requires an interactive console/TTY in GNS3.
+
 ## Tuning the PLC Flavor
 
 Edit `config/plc.yaml` to change:

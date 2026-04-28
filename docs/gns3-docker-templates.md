@@ -122,6 +122,33 @@ Each image includes `dhclient` and can request an address on startup. Your GNS3 
 
 For GNS3 templates, set `DHCP_FORCE=true` to request a lease even if the runtime pre-populates an address. For local Docker Compose, leave `DHCP_FORCE` unset so the containers keep their Docker-managed addresses and start immediately.
 
+## Static IP Console Prompt
+
+If you want students to assign a static address from the container console instead of using DHCP, set these environment variables in the GNS3 Docker template:
+
+```text
+STATIC_IP_PROMPT=true
+DHCP_ENABLED=false
+DHCP_INTERFACE=eth0
+```
+
+When the container starts, it prompts for:
+
+- IP address with CIDR, such as `192.168.10.20/24`
+- default gateway, optional
+- DNS server, optional
+
+The prompt only appears when the container has an interactive stdin/TTY. In GNS3, use an interactive Docker console for the appliance. If the container is started non-interactively, it logs a message and skips the prompt so automated builds and Compose runs do not hang.
+
+You can also set a static address without prompting:
+
+```text
+STATIC_IP_CIDR=192.168.10.20/24
+STATIC_GATEWAY=192.168.10.1
+STATIC_DNS=192.168.10.1
+DHCP_ENABLED=false
+```
+
 ## Realistic Traffic Guidance
 
 For training, the simulator gives repeatable Modbus TCP traffic with a ladder scan loop and realistic register behavior. For traffic that closely resembles a specific PLC model, capture a baseline PCAP from that model and tune:
