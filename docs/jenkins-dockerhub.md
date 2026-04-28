@@ -26,11 +26,6 @@ Create a Jenkins credential:
 
 Using an access token is preferred over storing your Docker Hub account password.
 
-The pipeline also loads this Jenkins credential for future Kubernetes deploy stages:
-
-- ID: `roseaw-225`
-- Exposed environment variable: `KUBECONFIG`
-
 ## Pipeline Parameters
 
 `DOCKERHUB_NAMESPACE`

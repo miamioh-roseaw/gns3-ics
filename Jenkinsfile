@@ -21,7 +21,6 @@ pipeline {
 
   environment {
     DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
-    KUBECONFIG = credentials('roseaw-225')
     PLC_IMAGE = 'gns3-ot-plc-ladder'
     REMOTE_IO_IMAGE = 'gns3-ot-remote-io-panel'
     HMI_IMAGE = 'gns3-ot-hmi'
