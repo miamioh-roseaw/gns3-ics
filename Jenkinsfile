@@ -135,9 +135,6 @@ pipeline {
   }
 
   post {
-    always {
-      sh 'docker logout || true'
-    }
     success {
       echo "Published ${DOCKERHUB_NAMESPACE}/${PLC_IMAGE}, ${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}, and ${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}"
     }
