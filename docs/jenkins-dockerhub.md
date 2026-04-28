@@ -20,7 +20,7 @@ The Jenkins agent must have:
 Create a Jenkins credential:
 
 - Kind: `Username with password`
-- ID: `roseaw@miamioh.edu`
+- ID: `roseaw-dockerhub`
 - Username: your Docker Hub username
 - Password: a Docker Hub access token
 

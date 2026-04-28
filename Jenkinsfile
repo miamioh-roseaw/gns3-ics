@@ -20,7 +20,7 @@ pipeline {
   }
 
   environment {
-    DOCKER_CREDENTIALS_ID = 'roseaw@miamioh.edu'
+    DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
     PLC_TAG_PREFIX = 'plc'
     REMOTE_IO_TAG_PREFIX = 'remote-io'
     HMI_TAG_PREFIX = 'hmi'
