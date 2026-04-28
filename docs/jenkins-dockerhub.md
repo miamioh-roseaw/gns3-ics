@@ -26,23 +26,13 @@ Create a Jenkins credential:
 
 Using an access token is preferred over storing your Docker Hub account password.
 
-## Pipeline Parameters
-
-`PUSH_LATEST`
-
-When enabled, the pipeline also publishes:
-
-```text
-latest
-```
-
 ## Tags Published
 
 For each image, Jenkins publishes:
 
 - the short Git commit SHA
 - the branch name
-- `latest`, when `PUSH_LATEST` is enabled
+- `latest`
 
 Example:
 
