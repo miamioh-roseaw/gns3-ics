@@ -8,6 +8,7 @@ from flask import Flask, abort, jsonify, redirect, render_template, request, url
 
 app = Flask(__name__)
 CONFIG_PATH = Path(os.getenv("IO_CONFIG", "/config/io-panel.yaml"))
+DEFAULT_CONFIG_PATH = Path("/app/config/io-panel.yaml")
 
 DEVICE_TYPES = {
     "pressure_sensor": {"label": "Pressure Sensor", "kind": "analog", "unit": "psi", "min": 0, "max": 300},
@@ -78,7 +79,13 @@ def default_config() -> dict[str, Any]:
 
 def load_config() -> dict[str, Any]:
     if not CONFIG_PATH.exists():
-        save_config(default_config())
+        if DEFAULT_CONFIG_PATH.exists():
+            with DEFAULT_CONFIG_PATH.open("r", encoding="utf-8") as handle:
+                config = yaml.safe_load(handle) or default_config()
+            config.setdefault("active_scenario", "normal")
+            config.setdefault("points", {})
+            return config
+        return default_config()
     with CONFIG_PATH.open("r", encoding="utf-8") as handle:
         config = yaml.safe_load(handle) or default_config()
     config.setdefault("active_scenario", "normal")

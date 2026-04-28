@@ -1,0 +1,20 @@
+active_scenario: normal
+points:
+  pressure:
+    device_type: pressure_sensor
+    value: 72.5
+  temperature:
+    device_type: temperature_sensor
+    value: 89.0
+  start_pb:
+    device_type: push_button
+    value: false
+  estop_ok:
+    device_type: e_stop_contact
+    value: true
+  door_closed:
+    device_type: door_interlock
+    value: true
+  tank_high:
+    device_type: float_switch
+    value: false

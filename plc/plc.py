@@ -121,6 +121,10 @@ def build_context() -> ModbusServerContext:
 
 def load_config() -> dict[str, Any]:
     config_path = os.getenv("PLC_CONFIG", "/config/plc.yaml")
+    if not os.path.exists(config_path):
+        fallback_path = "/app/config/plc.yaml"
+        LOG.warning("Config %s not found; using built-in default %s", config_path, fallback_path)
+        config_path = fallback_path
     with open(config_path, "r", encoding="utf-8") as handle:
         return yaml.safe_load(handle) or {}
 

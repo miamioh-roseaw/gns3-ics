@@ -10,6 +10,7 @@ from pymodbus.client import ModbusTcpClient
 
 app = Flask(__name__)
 CONFIG_PATH = Path(os.getenv("HMI_CONFIG", "/config/hmi.yaml"))
+DEFAULT_CONFIG_PATH = Path("/app/config/hmi.yaml")
 
 HMI_TYPES = {
     "manufacturing": {
@@ -68,9 +69,14 @@ def local_ip() -> str:
 
 def load_config() -> dict[str, Any]:
     if not CONFIG_PATH.exists():
-        save_config(default_config())
-    with CONFIG_PATH.open("r", encoding="utf-8") as handle:
-        config = yaml.safe_load(handle) or default_config()
+        if DEFAULT_CONFIG_PATH.exists():
+            with DEFAULT_CONFIG_PATH.open("r", encoding="utf-8") as handle:
+                config = yaml.safe_load(handle) or default_config()
+        else:
+            config = default_config()
+    else:
+        with CONFIG_PATH.open("r", encoding="utf-8") as handle:
+            config = yaml.safe_load(handle) or default_config()
     config.setdefault("hmi_type", "water")
     config.setdefault("hmi_ip", os.getenv("HMI_IP", local_ip()))
     if str(config["hmi_ip"]).lower() in {"", "auto", "static"}:
