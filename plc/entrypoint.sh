@@ -37,4 +37,8 @@ configure_static_ip() {
 
 configure_static_ip
 ip -4 addr show "${STATIC_INTERFACE}" || true
+current_ip="$(ip -4 -o addr show "${STATIC_INTERFACE}" | awk '{split($4, address, "/"); print address[1]; exit}' || true)"
+if [ -n "${current_ip}" ] && [ -n "${SERVICE_PORT:-}" ]; then
+  echo "${SERVICE_NAME:-Service} available at ${current_ip}:${SERVICE_PORT}"
+fi
 exec "$@"

@@ -107,6 +107,15 @@ http://<hmi-static-address>:8090
 
 Use the HMI type drop-down to switch between manufacturing, water, wastewater, and electrical grid process screens. The settings area also lets students or instructors change the HMI station IP shown on screen and the PLC IP/port used for Modbus TCP.
 
+## Browser Access
+
+The web interfaces listen on all container interfaces:
+
+- Remote I/O: TCP `8080`
+- HMI: TCP `8090`
+
+The container console prints the URL after IP setup. If your laptop browser cannot reach that URL, test from another node inside the same GNS3 topology first. To browse from the host machine, the host must have a route, cloud/NAT link, or other path into the GNS3 subnet.
+
 ## Static IP Console Prompt
 
 Each appliance asks for a static address from the container console before the application starts. Use an interactive Docker console in GNS3.

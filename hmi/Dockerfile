@@ -14,5 +14,6 @@ COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8090/tcp
+ENV SERVICE_NAME="HMI Web Panel" SERVICE_PORT="8090"
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python", "app.py"]

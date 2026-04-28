@@ -12,5 +12,6 @@ COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 5020/tcp
+ENV SERVICE_NAME="Modbus TCP PLC" SERVICE_PORT="5020"
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python", "plc.py"]

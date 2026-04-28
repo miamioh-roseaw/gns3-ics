@@ -14,5 +14,6 @@ COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8080/tcp
+ENV SERVICE_NAME="Remote I/O Panel" SERVICE_PORT="8080"
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python", "app.py"]
