@@ -9,9 +9,9 @@ pipeline {
   environment {
     DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
     PUSH_LATEST = 'true'
-    PLC_IMAGE = 'cithit/ot-plc-2'
-    RIO_IMAGE = 'cithit/ot-rio-2'
-    HMI_IMAGE = 'cithit/ot-hmi-2'
+    PLC_IMAGE = 'cithit/ot-plc-3'
+    RIO_IMAGE = 'cithit/ot-rio-3'
+    HMI_IMAGE = 'cithit/ot-hmi-3'
   }
 
   stages {
