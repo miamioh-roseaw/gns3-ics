@@ -118,7 +118,7 @@ Device DNS name / hostname, optional
 
 If the container is started non-interactively, it keeps the current interface address and starts normally. You can also set `STATIC_IP_CIDR`, `STATIC_GATEWAY`, `STATIC_DNS`, and `STATIC_DNS_NAME` in the template to avoid prompting.
 
-In the HMI settings, PLC host can be a full IP/hostname or just the last octet when the PLC is on the same /24 as the HMI. Example: with HMI `192.168.1.4`, entering `2` saves PLC host `192.168.1.2`.
+In the HMI settings, PLC host can be a full IP/hostname or just the last octet when the PLC is on the same /24 as the HMI. Example: with HMI `192.168.1.4`, entering `2` saves PLC host `192.168.1.2`. The HMI IP field must be a full IPv4 address for this shortcut.
 
 ## Tuning the PLC Flavor
 

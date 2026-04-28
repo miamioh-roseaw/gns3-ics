@@ -70,6 +70,16 @@ def local_ip() -> str:
         return "0.0.0.0"
 
 
+def is_ipv4_address(value: str) -> bool:
+    octets = value.split(".")
+    return len(octets) == 4 and all(octet.isdigit() and 0 <= int(octet) <= 255 for octet in octets)
+
+
+def normalize_base_ip(value: str) -> str:
+    value = value.strip()
+    return value if is_ipv4_address(value) else local_ip()
+
+
 def expand_last_octet(value: str, base_ip: str) -> str:
     value = value.strip()
     if not value.isdigit():
@@ -77,9 +87,10 @@ def expand_last_octet(value: str, base_ip: str) -> str:
     last_octet = int(value)
     if last_octet < 1 or last_octet > 254:
         return value
-    octets = base_ip.split(".")
-    if len(octets) != 4 or not all(octet.isdigit() for octet in octets):
+    base_ip = normalize_base_ip(base_ip)
+    if not is_ipv4_address(base_ip):
         return value
+    octets = base_ip.split(".")
     return ".".join([*octets[:3], str(last_octet)])
 
 
@@ -95,7 +106,7 @@ def load_config() -> dict[str, Any]:
             config = yaml.safe_load(handle) or default_config()
     config.setdefault("hmi_type", "water")
     config.setdefault("hmi_ip", os.getenv("HMI_IP", local_ip()))
-    if str(config["hmi_ip"]).lower() in {"", "auto", "static"}:
+    if str(config["hmi_ip"]).lower() in {"", "auto", "static"} or not is_ipv4_address(str(config["hmi_ip"])):
         config["hmi_ip"] = local_ip()
     config.setdefault("plc_host", os.getenv("PLC_HOST", "plc"))
     config.setdefault("plc_port", 5020)
@@ -181,7 +192,7 @@ def settings():
     config = load_config()
     hmi_type = request.form.get("hmi_type", config["hmi_type"])
     config["hmi_type"] = hmi_type if hmi_type in HMI_TYPES else "water"
-    config["hmi_ip"] = request.form.get("hmi_ip", config["hmi_ip"]).strip()
+    config["hmi_ip"] = normalize_base_ip(request.form.get("hmi_ip", config["hmi_ip"]))
     config["plc_host"] = expand_last_octet(
         request.form.get("plc_host", config["plc_host"]),
         config["hmi_ip"],
