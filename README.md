@@ -113,9 +113,10 @@ In a GNS3 topology, start each appliance with an interactive Docker console. The
 IP address with CIDR, example 192.168.10.20/24
 Default gateway, optional
 DNS server, optional
+Device DNS name / hostname, optional
 ```
 
-If the container is started non-interactively, it keeps the current interface address and starts normally. You can also set `STATIC_IP_CIDR`, `STATIC_GATEWAY`, and `STATIC_DNS` in the template to avoid prompting.
+If the container is started non-interactively, it keeps the current interface address and starts normally. You can also set `STATIC_IP_CIDR`, `STATIC_GATEWAY`, `STATIC_DNS`, and `STATIC_DNS_NAME` in the template to avoid prompting.
 
 ## Tuning the PLC Flavor
 

@@ -132,10 +132,13 @@ The prompt asks for:
 - IP address with CIDR, such as `192.168.10.20/24`
 - default gateway, optional
 - DNS server, optional
+- device DNS name / hostname, optional
 
 If the container is started non-interactively, it logs a message, keeps the current address, and starts the application so automated builds and Compose runs do not hang. If static assignment fails, the container logs a warning and still starts the application.
 
 For GNS3 templates, allow `NET_ADMIN` or run the appliance as privileged so Linux can apply the entered IP address.
+
+The DNS name prompt updates the appliance hostname and adds a self-entry to `/etc/hosts`. Other devices will only resolve that name if you also configure DNS or host entries for the topology.
 
 You can also set a static address without prompting:
 
@@ -143,6 +146,7 @@ You can also set a static address without prompting:
 STATIC_IP_CIDR=192.168.10.20/24
 STATIC_GATEWAY=192.168.10.1
 STATIC_DNS=192.168.10.1
+STATIC_DNS_NAME=plc1.local
 STATIC_INTERFACE=eth0
 ```
 

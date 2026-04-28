@@ -7,8 +7,9 @@ configure_static_ip() {
   ip_cidr="${STATIC_IP_CIDR:-}"
   gateway="${STATIC_GATEWAY:-}"
   dns_server="${STATIC_DNS:-}"
+  dns_name="${STATIC_DNS_NAME:-${DEVICE_DNS_NAME:-}}"
 
-  if [ -t 0 ] && [ -z "${ip_cidr}" ]; then
+  if [ -t 0 ] && [ -z "${ip_cidr}" ] && [ -z "${dns_name}" ]; then
     echo "Static IP setup for ${STATIC_INTERFACE}"
     printf "IP address with CIDR, example 192.168.10.40/24. Leave blank to keep current address: "
     read -r ip_cidr
@@ -18,6 +19,8 @@ configure_static_ip() {
       printf "DNS server, optional: "
       read -r dns_server
     fi
+    printf "Device DNS name / hostname, optional: "
+    read -r dns_name
   elif [ -z "${ip_cidr}" ]; then
     echo "No static IP provided and stdin is not interactive; keeping current address"
   fi
@@ -31,6 +34,20 @@ configure_static_ip() {
     fi
     if [ -n "${dns_server}" ]; then
       printf "nameserver %s\n" "${dns_server}" > /etc/resolv.conf || echo "Warning: could not update /etc/resolv.conf"
+    fi
+  fi
+
+  if [ -n "${dns_name}" ]; then
+    ip_address="$(printf "%s" "${ip_cidr}" | cut -d/ -f1)"
+    if [ -z "${ip_address}" ]; then
+      ip_address="$(ip -4 -o addr show "${STATIC_INTERFACE}" | awk '{split($4, address, "/"); print address[1]; exit}' || true)"
+    fi
+    short_name="$(printf "%s" "${dns_name}" | cut -d. -f1)"
+    echo "Applying device DNS name ${dns_name}"
+    printf "%s\n" "${short_name}" > /etc/hostname || echo "Warning: could not update /etc/hostname"
+    hostname "${short_name}" || echo "Warning: could not set runtime hostname"
+    if [ -n "${ip_address}" ]; then
+      printf "%s %s %s\n" "${ip_address}" "${dns_name}" "${short_name}" >> /etc/hosts || echo "Warning: could not update /etc/hosts"
     fi
   fi
 }
