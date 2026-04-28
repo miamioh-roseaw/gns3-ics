@@ -30,6 +30,7 @@ DHCP_ENABLED=true
 DHCP_INTERFACE=eth0
 DHCP_FORCE=true
 DHCP_TIMEOUT=15
+STATIC_IP_FALLBACK_PROMPT=true
 ```
 
 Mount the local `config` directory into the container as `/config:ro`.
@@ -53,6 +54,7 @@ DHCP_ENABLED=true
 DHCP_INTERFACE=eth0
 DHCP_FORCE=true
 DHCP_TIMEOUT=15
+STATIC_IP_FALLBACK_PROMPT=true
 ```
 
 Mount the local `config` directory into the container as `/config`.
@@ -80,6 +82,7 @@ DHCP_ENABLED=true
 DHCP_INTERFACE=eth0
 DHCP_FORCE=true
 DHCP_TIMEOUT=15
+STATIC_IP_FALLBACK_PROMPT=true
 ```
 
 Mount the local `config` directory into the container as `/config`.
@@ -121,6 +124,8 @@ Use the HMI type drop-down to switch between manufacturing, water, wastewater, a
 Each image includes `dhclient` and can request an address on startup. Your GNS3 topology must include a DHCP server or router service on the same L2 segment. If your GNS3 Docker template supports Linux capabilities, allow `NET_ADMIN` and `NET_RAW` so the DHCP client can configure the interface.
 
 For GNS3 templates, set `DHCP_FORCE=true` to request a lease even if the runtime pre-populates an address. For local Docker Compose, leave `DHCP_FORCE` unset so the containers keep their Docker-managed addresses and start immediately.
+
+If DHCP fails and the console is interactive, `STATIC_IP_FALLBACK_PROMPT=true` offers the static IP prompt automatically.
 
 ## Static IP Console Prompt
 
