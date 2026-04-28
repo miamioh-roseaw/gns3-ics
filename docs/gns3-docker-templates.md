@@ -12,7 +12,7 @@ Then create three GNS3 Docker templates.
 
 - Template type: Docker container
 - Name: `OT PLC Ladder - Modbus TCP`
-- Image: `gns3-ot-plc-ladder:latest`
+- Image: `cithit/gns3-ics:plc-latest`
 - Adapters: `1`
 - Start command: leave default
 - Console: optional shell console
@@ -34,7 +34,7 @@ Mount the local `config` directory into the container as `/config:ro`.
 
 - Template type: Docker container
 - Name: `OT Remote I/O Panel`
-- Image: `gns3-ot-remote-io-panel:latest`
+- Image: `cithit/gns3-ics:remote-io-latest`
 - Adapters: `1`
 - Start command: leave default
 - Console: optional shell console
@@ -53,7 +53,7 @@ Mount the local `config` directory into the container as `/config`.
 
 - Template type: Docker container
 - Name: `OT HMI - Modbus TCP`
-- Image: `gns3-ot-hmi:latest`
+- Image: `cithit/gns3-ics:hmi-latest`
 - Adapters: `1`
 - Start command: leave default
 - Console: optional shell console

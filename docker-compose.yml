@@ -1,7 +1,7 @@
 services:
   plc:
     build: ./plc
-    image: gns3-ot-plc-ladder:latest
+    image: cithit/gns3-ics:plc-latest
     container_name: ot-plc-ladder
     hostname: plc-compactlogix-sim
     environment:
@@ -19,7 +19,7 @@ services:
 
   remote-io:
     build: ./io-panel
-    image: gns3-ot-remote-io-panel:latest
+    image: cithit/gns3-ics:remote-io-latest
     container_name: ot-remote-io-panel
     hostname: remote-io-panel
     environment:
@@ -34,7 +34,7 @@ services:
 
   hmi:
     build: ./hmi
-    image: gns3-ot-hmi:latest
+    image: cithit/gns3-ics:hmi-latest
     container_name: ot-hmi
     hostname: hmi-operator-panel
     environment:

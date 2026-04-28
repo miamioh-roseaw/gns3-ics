@@ -1,10 +1,10 @@
 # Jenkins Docker Hub Pipeline
 
-The root `Jenkinsfile` builds and pushes three Docker images:
+The root `Jenkinsfile` builds and pushes three component-tagged images to one Docker Hub repository:
 
-- `gns3-ot-plc-ladder`
-- `gns3-ot-remote-io-panel`
-- `gns3-ot-hmi`
+- `cithit/gns3-ics:plc-latest`
+- `cithit/gns3-ics:remote-io-latest`
+- `cithit/gns3-ics:hmi-latest`
 
 ## Jenkins Requirements
 
@@ -20,7 +20,7 @@ The Jenkins agent must have:
 Create a Jenkins credential:
 
 - Kind: `Username with password`
-- ID: `roseaw-dockerhub`
+- ID: `roseaw@miamioh.edu`
 - Username: your Docker Hub username
 - Password: a Docker Hub access token
 
@@ -28,36 +28,38 @@ Using an access token is preferred over storing your Docker Hub account password
 
 ## Pipeline Parameters
 
-`DOCKERHUB_NAMESPACE`
+`DOCKERHUB_REPOSITORY`
 
-Docker Hub username or organization. The default is:
+Docker Hub repository. The default is:
 
 ```text
-miamioh-roseaw
+cithit/gns3-ics
 ```
 
-Change this if your Docker Hub namespace is different from your GitHub namespace.
+Change this only if the Docker Hub repository changes.
 
 `PUSH_LATEST`
 
 When enabled, the pipeline also publishes:
 
 ```text
-latest
+component-specific latest tags
 ```
 
 ## Tags Published
 
 For each image, Jenkins publishes:
 
-- the short Git commit SHA
-- the branch name
-- `latest`, when `PUSH_LATEST` is enabled
+- the component plus short Git commit SHA
+- the component plus branch name
+- the component plus `latest`, when `PUSH_LATEST` is enabled
 
 Example:
 
 ```text
-miamioh-roseaw/gns3-ot-plc-ladder:latest
-miamioh-roseaw/gns3-ot-plc-ladder:main
-miamioh-roseaw/gns3-ot-plc-ladder:80f0a24abcd1
+cithit/gns3-ics:plc-latest
+cithit/gns3-ics:plc-main
+cithit/gns3-ics:plc-80f0a24abcd1
+cithit/gns3-ics:remote-io-latest
+cithit/gns3-ics:hmi-latest
 ```

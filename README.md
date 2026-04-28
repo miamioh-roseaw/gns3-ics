@@ -6,6 +6,14 @@ This starter kit creates three Docker-backed OT devices for GNS3:
 - `ot-remote-io-panel`: a browser-managed remote I/O panel with selectable field devices.
 - `ot-hmi`: an operator HMI that connects to the PLC over Modbus TCP.
 
+Published Docker Hub tags use a single repository:
+
+```text
+cithit/gns3-ics:plc-latest
+cithit/gns3-ics:remote-io-latest
+cithit/gns3-ics:hmi-latest
+```
+
 The PLC behavior is intentionally realistic at the Modbus/register/scan level, but it cannot be an exact network fingerprint of a vendor PLC. Exact fingerprinting would require the real firmware/protocol stack, vendor TCP quirks, and timing behavior.
 
 ## Run locally
