@@ -117,7 +117,9 @@ The prompt asks for:
 - default gateway, optional
 - DNS server, optional
 
-If the container is started non-interactively, it logs a message, keeps the current address, and starts the application so automated builds and Compose runs do not hang.
+If the container is started non-interactively, it logs a message, keeps the current address, and starts the application so automated builds and Compose runs do not hang. If static assignment fails, the container logs a warning and still starts the application.
+
+For GNS3 templates, allow `NET_ADMIN` or run the appliance as privileged so Linux can apply the entered IP address.
 
 You can also set a static address without prompting:
 

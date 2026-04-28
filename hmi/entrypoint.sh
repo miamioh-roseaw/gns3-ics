@@ -24,14 +24,13 @@ configure_static_ip() {
 
   if [ -n "${ip_cidr}" ]; then
     echo "Applying static IP ${ip_cidr} on ${STATIC_INTERFACE}"
-    ip addr flush dev "${STATIC_INTERFACE}" || true
-    ip addr add "${ip_cidr}" dev "${STATIC_INTERFACE}"
-    ip link set "${STATIC_INTERFACE}" up
+    ip link set "${STATIC_INTERFACE}" up || echo "Warning: could not bring ${STATIC_INTERFACE} up"
+    ip addr replace "${ip_cidr}" dev "${STATIC_INTERFACE}" || echo "Warning: could not assign ${ip_cidr}; check NET_ADMIN/privileged settings"
     if [ -n "${gateway}" ]; then
-      ip route replace default via "${gateway}" dev "${STATIC_INTERFACE}"
+      ip route replace default via "${gateway}" dev "${STATIC_INTERFACE}" || echo "Warning: could not set default gateway ${gateway}"
     fi
     if [ -n "${dns_server}" ]; then
-      printf "nameserver %s\n" "${dns_server}" > /etc/resolv.conf
+      printf "nameserver %s\n" "${dns_server}" > /etc/resolv.conf || echo "Warning: could not update /etc/resolv.conf"
     fi
   fi
 }
