@@ -104,6 +104,7 @@ Each type changes the screen title, process labels, and visual emphasis while us
 Build each folder as a Docker appliance, or import this compose model into a host that GNS3 can reach. For GNS3 Docker templates, expose:
 
 - PLC: TCP `5020`
+- PLC settings panel: TCP `8081`
 - Remote I/O panel: TCP `8080`
 - HMI: TCP `8090`
 

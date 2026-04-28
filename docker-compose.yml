@@ -7,11 +7,13 @@ services:
     environment:
       PLC_PROFILE: compactlogix_like
       MODBUS_PORT: "5020"
+      PLC_WEB_PORT: "8081"
       PLC_CONFIG: /config/plc.yaml
       IO_PANEL_URL: http://remote-io:8080/api/io
       STATIC_INTERFACE: eth0
     ports:
       - "5020:5020"
+      - "8081:8081"
     volumes:
       - ./config:/config:ro
     cap_add:

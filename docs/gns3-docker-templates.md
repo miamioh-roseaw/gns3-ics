@@ -17,6 +17,7 @@ Then create three GNS3 Docker templates.
 - Start command: leave default
 - Console: optional shell console
 - Exposed service: TCP `5020`
+- Exposed web panel: TCP `8081`
 - Addressing: static IP prompt on `eth0`
 
 Environment variables:
@@ -24,6 +25,7 @@ Environment variables:
 ```text
 PLC_PROFILE=compactlogix_like
 MODBUS_PORT=5020
+PLC_WEB_PORT=8081
 PLC_CONFIG=/config/plc.yaml
 IO_PANEL_URL=http://<remote-io-static-address>:8080/api/io
 STATIC_INTERFACE=eth0
@@ -87,6 +89,16 @@ unit id: 1
 
 Use the PLC static address. Use the register map in the project `README.md`.
 
+## PLC Settings Panel
+
+Open the PLC settings panel in a browser:
+
+```text
+http://<plc-static-address>:8081
+```
+
+Use it to change PLC scan time and the Remote I/O panel URL at runtime.
+
 ## Instructor Panel
 
 Open the remote I/O panel in a browser:
@@ -113,6 +125,7 @@ For PLC host entry in the HMI, you can enter only the last octet if the PLC is o
 
 The web interfaces listen on all container interfaces:
 
+- PLC settings panel: TCP `8081`
 - Remote I/O: TCP `8080`
 - HMI: TCP `8090`
 
@@ -121,6 +134,7 @@ The container console prints the URL after IP setup. Health checks:
 ```text
 http://<remote-io-static-address>:8080/healthz
 http://<hmi-static-address>:8090/healthz
+http://<plc-static-address>:8081/healthz
 ```
 
 If your laptop browser cannot reach that URL, test from another node inside the same GNS3 topology first. To browse from the host machine, the host must have a route, cloud/NAT link, or other path into the GNS3 subnet.
