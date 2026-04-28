@@ -1,10 +1,10 @@
 # Jenkins Docker Hub Pipeline
 
-The root `Jenkinsfile` builds and pushes three component-tagged images to one Docker Hub repository:
+The root `Jenkinsfile` builds and pushes three Docker Hub images:
 
-- `cithit/gns3-ics:plc-latest`
-- `cithit/gns3-ics:remote-io-latest`
-- `cithit/gns3-ics:hmi-latest`
+- `cithit/plc`
+- `cithit/rio`
+- `cithit/hmi`
 
 ## Jenkins Requirements
 
@@ -28,36 +28,28 @@ Using an access token is preferred over storing your Docker Hub account password
 
 ## Pipeline Parameters
 
-The Docker Hub repository is set in the Jenkinsfile environment:
-
-```text
-cithit/gns3-ics
-```
-
-Change `DOCKERHUB_REPOSITORY` in `Jenkinsfile` only if the Docker Hub repository changes.
-
 `PUSH_LATEST`
 
 When enabled, the pipeline also publishes:
 
 ```text
-component-specific latest tags
+latest
 ```
 
 ## Tags Published
 
 For each image, Jenkins publishes:
 
-- the component plus short Git commit SHA
-- the component plus branch name
-- the component plus `latest`, when `PUSH_LATEST` is enabled
+- the short Git commit SHA
+- the branch name
+- `latest`, when `PUSH_LATEST` is enabled
 
 Example:
 
 ```text
-cithit/gns3-ics:plc-latest
-cithit/gns3-ics:plc-main
-cithit/gns3-ics:plc-80f0a24abcd1
-cithit/gns3-ics:remote-io-latest
-cithit/gns3-ics:hmi-latest
+cithit/plc:latest
+cithit/plc:main
+cithit/plc:80f0a24abcd1
+cithit/rio:latest
+cithit/hmi:latest
 ```

@@ -15,11 +15,10 @@ pipeline {
   }
 
   environment {
-    DOCKERHUB_REPOSITORY = 'cithit/gns3-ics'
     DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
-    PLC_TAG_PREFIX = 'plc'
-    REMOTE_IO_TAG_PREFIX = 'remote-io'
-    HMI_TAG_PREFIX = 'hmi'
+    PLC_IMAGE = 'cithit/plc'
+    RIO_IMAGE = 'cithit/rio'
+    HMI_IMAGE = 'cithit/hmi'
   }
 
   stages {
@@ -53,26 +52,26 @@ pipeline {
 
           docker build \
             --pull \
-            --tag "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-${GIT_SHORT_SHA}" \
-            --tag "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-${BRANCH_TAG}" \
+            --tag "${PLC_IMAGE}:${GIT_SHORT_SHA}" \
+            --tag "${PLC_IMAGE}:${BRANCH_TAG}" \
             ./plc
 
           docker build \
             --pull \
-            --tag "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-${GIT_SHORT_SHA}" \
-            --tag "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-${BRANCH_TAG}" \
+            --tag "${RIO_IMAGE}:${GIT_SHORT_SHA}" \
+            --tag "${RIO_IMAGE}:${BRANCH_TAG}" \
             ./io-panel
 
           docker build \
             --pull \
-            --tag "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-${GIT_SHORT_SHA}" \
-            --tag "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-${BRANCH_TAG}" \
+            --tag "${HMI_IMAGE}:${GIT_SHORT_SHA}" \
+            --tag "${HMI_IMAGE}:${BRANCH_TAG}" \
             ./hmi
 
           if [ "${PUSH_LATEST}" = "true" ]; then
-            docker tag "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-${GIT_SHORT_SHA}" "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-latest"
-            docker tag "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-${GIT_SHORT_SHA}" "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-latest"
-            docker tag "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-${GIT_SHORT_SHA}" "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-latest"
+            docker tag "${PLC_IMAGE}:${GIT_SHORT_SHA}" "${PLC_IMAGE}:latest"
+            docker tag "${RIO_IMAGE}:${GIT_SHORT_SHA}" "${RIO_IMAGE}:latest"
+            docker tag "${HMI_IMAGE}:${GIT_SHORT_SHA}" "${HMI_IMAGE}:latest"
           fi
         '''
       }
@@ -82,9 +81,9 @@ pipeline {
       steps {
         sh '''
           set -eu
-          docker image inspect "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-${GIT_SHORT_SHA}" >/dev/null
-          docker image inspect "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-${GIT_SHORT_SHA}" >/dev/null
-          docker image inspect "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-${GIT_SHORT_SHA}" >/dev/null
+          docker image inspect "${PLC_IMAGE}:${GIT_SHORT_SHA}" >/dev/null
+          docker image inspect "${RIO_IMAGE}:${GIT_SHORT_SHA}" >/dev/null
+          docker image inspect "${HMI_IMAGE}:${GIT_SHORT_SHA}" >/dev/null
         '''
       }
     }
@@ -106,19 +105,19 @@ pipeline {
                 --username "${DOCKERHUB_USERNAME}" \
                 --password-stdin
 
-              docker push "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-${GIT_SHORT_SHA}"
-              docker push "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-${BRANCH_TAG}"
+              docker push "${PLC_IMAGE}:${GIT_SHORT_SHA}"
+              docker push "${PLC_IMAGE}:${BRANCH_TAG}"
 
-              docker push "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-${GIT_SHORT_SHA}"
-              docker push "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-${BRANCH_TAG}"
+              docker push "${RIO_IMAGE}:${GIT_SHORT_SHA}"
+              docker push "${RIO_IMAGE}:${BRANCH_TAG}"
 
-              docker push "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-${GIT_SHORT_SHA}"
-              docker push "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-${BRANCH_TAG}"
+              docker push "${HMI_IMAGE}:${GIT_SHORT_SHA}"
+              docker push "${HMI_IMAGE}:${BRANCH_TAG}"
 
               if [ "${PUSH_LATEST}" = "true" ]; then
-                docker push "${DOCKERHUB_REPOSITORY}:${PLC_TAG_PREFIX}-latest"
-                docker push "${DOCKERHUB_REPOSITORY}:${REMOTE_IO_TAG_PREFIX}-latest"
-                docker push "${DOCKERHUB_REPOSITORY}:${HMI_TAG_PREFIX}-latest"
+                docker push "${PLC_IMAGE}:latest"
+                docker push "${RIO_IMAGE}:latest"
+                docker push "${HMI_IMAGE}:latest"
               fi
 
               docker logout
@@ -131,7 +130,7 @@ pipeline {
 
   post {
     success {
-      echo "Published PLC, remote I/O, and HMI tags to ${DOCKERHUB_REPOSITORY}"
+      echo "Published ${PLC_IMAGE}, ${RIO_IMAGE}, and ${HMI_IMAGE}"
     }
   }
 }
