@@ -9,9 +9,9 @@ This starter kit creates three Docker-backed OT devices for GNS3:
 Published Docker Hub images:
 
 ```text
-cithit/ot-plc-1:latest
-cithit/ot-rio-1:latest
-cithit/ot-hmi-1:latest
+cithit/ot-plc-2:latest
+cithit/ot-rio-2:latest
+cithit/ot-hmi-2:latest
 ```
 
 The PLC behavior is intentionally realistic at the Modbus/register/scan level, but it cannot be an exact network fingerprint of a vendor PLC. Exact fingerprinting would require the real firmware/protocol stack, vendor TCP quirks, and timing behavior.
