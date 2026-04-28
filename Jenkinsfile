@@ -6,14 +6,6 @@ pipeline {
     disableConcurrentBuilds()
   }
 
-  parameters {
-    booleanParam(
-      name: 'PUSH_LATEST',
-      defaultValue: true,
-      description: 'Also push the latest tag'
-    )
-  }
-
   environment {
     DOCKER_CREDENTIALS_ID = 'roseaw-dockerhub'
     PLC_IMAGE = 'cithit/plc'
