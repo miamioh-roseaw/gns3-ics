@@ -1,5 +1,6 @@
 import os
 import socket
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -9,6 +10,8 @@ from pymodbus.client import ModbusTcpClient
 
 
 app = Flask(__name__)
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
+LOG = logging.getLogger("ot-hmi")
 CONFIG_PATH = Path(os.getenv("HMI_CONFIG", "/config/hmi.yaml"))
 DEFAULT_CONFIG_PATH = Path("/app/config/hmi.yaml")
 
@@ -133,8 +136,9 @@ def read_plc(config: dict[str, Any]) -> dict[str, Any]:
                 "temperature": registers.registers[1] / 10,
             }
         )
-    except OSError as exc:
+    except Exception as exc:
         values["error"] = str(exc)
+        LOG.warning("PLC read failed: %s", exc)
     finally:
         client.close()
     return values
@@ -154,6 +158,11 @@ def api_status():
     return jsonify({"config": config, "plc": read_plc(config)})
 
 
+@app.get("/healthz")
+def healthz():
+    return jsonify({"status": "ok", "service": "hmi"})
+
+
 @app.post("/settings")
 def settings():
     config = load_config()
@@ -168,4 +177,5 @@ def settings():
 
 
 if __name__ == "__main__":
+    LOG.info("Starting HMI web server on 0.0.0.0:8090")
     app.run(host="0.0.0.0", port=8090)

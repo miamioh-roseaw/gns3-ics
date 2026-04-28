@@ -1,4 +1,5 @@
 import os
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -7,6 +8,8 @@ from flask import Flask, abort, jsonify, redirect, render_template, request, url
 
 
 app = Flask(__name__)
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
+LOG = logging.getLogger("ot-rio")
 CONFIG_PATH = Path(os.getenv("IO_CONFIG", "/config/io-panel.yaml"))
 DEFAULT_CONFIG_PATH = Path("/app/config/io-panel.yaml")
 
@@ -126,6 +129,11 @@ def api_io():
     return jsonify({"active_scenario": config.get("active_scenario", "normal"), "points": points})
 
 
+@app.get("/healthz")
+def healthz():
+    return jsonify({"status": "ok", "service": "remote-io"})
+
+
 @app.post("/point/<name>")
 def update_point(name: str):
     config = load_config()
@@ -181,4 +189,5 @@ def add_point():
 
 
 if __name__ == "__main__":
+    LOG.info("Starting Remote I/O web server on 0.0.0.0:8080")
     app.run(host="0.0.0.0", port=8080)

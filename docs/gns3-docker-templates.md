@@ -114,7 +114,14 @@ The web interfaces listen on all container interfaces:
 - Remote I/O: TCP `8080`
 - HMI: TCP `8090`
 
-The container console prints the URL after IP setup. If your laptop browser cannot reach that URL, test from another node inside the same GNS3 topology first. To browse from the host machine, the host must have a route, cloud/NAT link, or other path into the GNS3 subnet.
+The container console prints the URL after IP setup. Health checks:
+
+```text
+http://<remote-io-static-address>:8080/healthz
+http://<hmi-static-address>:8090/healthz
+```
+
+If your laptop browser cannot reach that URL, test from another node inside the same GNS3 topology first. To browse from the host machine, the host must have a route, cloud/NAT link, or other path into the GNS3 subnet.
 
 ## Static IP Console Prompt
 
