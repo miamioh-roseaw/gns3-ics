@@ -1,9 +1,10 @@
 # Jenkins Docker Hub Pipeline
 
-The root `Jenkinsfile` builds and pushes two Docker images:
+The root `Jenkinsfile` builds and pushes three Docker images:
 
 - `gns3-ot-plc-ladder`
 - `gns3-ot-remote-io-panel`
+- `gns3-ot-hmi`
 
 ## Jenkins Requirements
 

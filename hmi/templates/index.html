@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="5">
+    <title>{{ screen.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body class="theme-{{ config.hmi_type }}">
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">{{ screen.process }}</p>
+          <h1>{{ screen.title }}</h1>
+        </div>
+        <div class="connection {{ 'online' if plc.connected else 'offline' }}">
+          {{ "PLC Online" if plc.connected else "PLC Offline" }}
+        </div>
+      </header>
+
+      <section class="settings">
+        <form action="/settings" method="post">
+          <label>
+            HMI Type
+            <select name="hmi_type">
+              {% for type_id, hmi in hmi_types.items() %}
+              <option value="{{ type_id }}" {% if type_id == config.hmi_type %}selected{% endif %}>{{ hmi.label }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            This HMI IP
+            <input name="hmi_ip" value="{{ config.hmi_ip }}" inputmode="numeric">
+          </label>
+          <label>
+            PLC IP / Host
+            <input name="plc_host" value="{{ config.plc_host }}">
+          </label>
+          <label>
+            PLC Port
+            <input name="plc_port" type="number" min="1" max="65535" value="{{ config.plc_port }}">
+          </label>
+          <label>
+            Unit ID
+            <input name="unit_id" type="number" min="0" max="255" value="{{ config.unit_id }}">
+          </label>
+          <button type="submit">Apply</button>
+        </form>
+      </section>
+
+      <section class="overview">
+        <div class="process-card pump {{ 'running' if plc.pump_run_cmd else 'stopped' }}">
+          <span>{{ screen.primary }}</span>
+          <strong>{{ "Running" if plc.pump_run_cmd else "Stopped" }}</strong>
+        </div>
+        <div class="process-card alarm {{ 'active' if plc.alarm_active else '' }}">
+          <span>Alarm State</span>
+          <strong>{{ "Active" if plc.alarm_active else "Normal" }}</strong>
+        </div>
+        <div class="process-card">
+          <span>{{ screen.pressure_label }}</span>
+          <strong>{{ "%.1f"|format(plc.pressure) if plc.pressure is not none else "--" }} psi</strong>
+        </div>
+        <div class="process-card">
+          <span>{{ screen.temperature_label }}</span>
+          <strong>{{ "%.1f"|format(plc.temperature) if plc.temperature is not none else "--" }} degF</strong>
+        </div>
+      </section>
+
+      <section class="mimic">
+        <div class="tank">
+          <div class="level {{ 'high' if plc.tank_high else '' }}"></div>
+        </div>
+        <div class="pipe"></div>
+        <div class="pump-symbol {{ 'spin' if plc.pump_run_cmd else '' }}">
+          <div></div>
+        </div>
+        <div class="pipe"></div>
+        <div class="destination">{{ hmi_types[config.hmi_type].label }}</div>
+      </section>
+
+      <section class="inputs">
+        <div class="{{ 'on' if plc.start_pb else '' }}"><span>Start PB</span><strong>{{ "On" if plc.start_pb else "Off" }}</strong></div>
+        <div class="{{ 'on' if plc.estop_ok else 'bad' }}"><span>E-Stop Contact</span><strong>{{ "Healthy" if plc.estop_ok else "Open" }}</strong></div>
+        <div class="{{ 'on' if plc.door_closed else 'bad' }}"><span>Door Interlock</span><strong>{{ "Closed" if plc.door_closed else "Open" }}</strong></div>
+        <div class="{{ 'bad' if plc.tank_high else '' }}"><span>High Float</span><strong>{{ "High" if plc.tank_high else "Normal" }}</strong></div>
+      </section>
+
+      {% if plc.error %}
+      <p class="error">{{ plc.error }}</p>
+      {% endif %}
+    </main>
+  </body>
+</html>

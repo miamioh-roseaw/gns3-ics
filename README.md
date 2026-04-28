@@ -1,9 +1,10 @@
 # GNS3 OT/ICS Docker Lab Starter
 
-This starter kit creates two Docker-backed OT devices for GNS3:
+This starter kit creates three Docker-backed OT devices for GNS3:
 
 - `ot-plc-ladder`: a ladder-scan PLC simulator that exposes Modbus TCP for SCADA tools such as Ignition.
 - `ot-remote-io-panel`: a browser-managed remote I/O panel with selectable field devices.
+- `ot-hmi`: an operator HMI that connects to the PLC over Modbus TCP.
 
 The PLC behavior is intentionally realistic at the Modbus/register/scan level, but it cannot be an exact network fingerprint of a vendor PLC. Exact fingerprinting would require the real firmware/protocol stack, vendor TCP quirks, and timing behavior.
 
@@ -17,6 +18,12 @@ Open the remote I/O panel:
 
 ```text
 http://localhost:8080
+```
+
+Open the HMI:
+
+```text
+http://localhost:8090
 ```
 
 Connect Ignition or another Modbus TCP client to:
@@ -68,12 +75,29 @@ The remote I/O panel includes an instructor scenario area for injecting common p
 
 These presets update the same simulated field points read by the PLC, so Ignition will see the effect through Modbus TCP just like a manual sensor change.
 
+## HMI
+
+The HMI container reads the PLC over Modbus TCP and shows an operator-facing process screen. It includes a selector for:
+
+- Manufacturing
+- Water
+- Wastewater
+- Electrical grid
+
+Each type changes the screen title, process labels, and visual emphasis while using the same PLC data. The HMI settings area also lets you enter:
+
+- this HMI station IP address
+- PLC IP or hostname
+- PLC TCP port
+- Modbus unit ID
+
 ## GNS3 Use
 
 Build each folder as a Docker appliance, or import this compose model into a host that GNS3 can reach. For GNS3 Docker templates, expose:
 
 - PLC: TCP `5020`
 - Remote I/O panel: TCP `8080`
+- HMI: TCP `8090`
 
 In a GNS3 topology, place Ignition on the same emulated segment or route to the PLC container address. Use `10.10.10.20:5020` if running with the included compose network.
 

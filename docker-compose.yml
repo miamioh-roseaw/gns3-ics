@@ -32,6 +32,27 @@ services:
       ot_net:
         ipv4_address: 10.10.10.30
 
+  hmi:
+    build: ./hmi
+    image: gns3-ot-hmi:latest
+    container_name: ot-hmi
+    hostname: hmi-operator-panel
+    environment:
+      HMI_CONFIG: /config/hmi.yaml
+      HMI_IP: 10.10.10.40
+      PLC_HOST: 10.10.10.20
+      PLC_PORT: "5020"
+      PLC_UNIT_ID: "1"
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./config:/config
+    depends_on:
+      - plc
+    networks:
+      ot_net:
+        ipv4_address: 10.10.10.40
+
 networks:
   ot_net:
     driver: bridge

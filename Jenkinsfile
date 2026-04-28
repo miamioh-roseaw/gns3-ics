@@ -24,6 +24,7 @@ pipeline {
     KUBECONFIG = credentials('roseaw-225')
     PLC_IMAGE = 'gns3-ot-plc-ladder'
     REMOTE_IO_IMAGE = 'gns3-ot-remote-io-panel'
+    HMI_IMAGE = 'gns3-ot-hmi'
   }
 
   stages {
@@ -67,9 +68,16 @@ pipeline {
             --tag "${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}:${BRANCH_TAG}" \
             ./io-panel
 
+          docker build \
+            --pull \
+            --tag "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:${GIT_SHORT_SHA}" \
+            --tag "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:${BRANCH_TAG}" \
+            ./hmi
+
           if [ "${PUSH_LATEST}" = "true" ]; then
             docker tag "${DOCKERHUB_NAMESPACE}/${PLC_IMAGE}:${GIT_SHORT_SHA}" "${DOCKERHUB_NAMESPACE}/${PLC_IMAGE}:latest"
             docker tag "${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}:${GIT_SHORT_SHA}" "${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}:latest"
+            docker tag "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:${GIT_SHORT_SHA}" "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:latest"
           fi
         '''
       }
@@ -81,6 +89,7 @@ pipeline {
           set -eu
           docker image inspect "${DOCKERHUB_NAMESPACE}/${PLC_IMAGE}:${GIT_SHORT_SHA}" >/dev/null
           docker image inspect "${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}:${GIT_SHORT_SHA}" >/dev/null
+          docker image inspect "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:${GIT_SHORT_SHA}" >/dev/null
         '''
       }
     }
@@ -108,9 +117,13 @@ pipeline {
               docker push "${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}:${GIT_SHORT_SHA}"
               docker push "${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}:${BRANCH_TAG}"
 
+              docker push "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:${GIT_SHORT_SHA}"
+              docker push "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:${BRANCH_TAG}"
+
               if [ "${PUSH_LATEST}" = "true" ]; then
                 docker push "${DOCKERHUB_NAMESPACE}/${PLC_IMAGE}:latest"
                 docker push "${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}:latest"
+                docker push "${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}:latest"
               fi
 
               docker logout
@@ -126,7 +139,7 @@ pipeline {
       sh 'docker logout || true'
     }
     success {
-      echo "Published ${DOCKERHUB_NAMESPACE}/${PLC_IMAGE} and ${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}"
+      echo "Published ${DOCKERHUB_NAMESPACE}/${PLC_IMAGE}, ${DOCKERHUB_NAMESPACE}/${REMOTE_IO_IMAGE}, and ${DOCKERHUB_NAMESPACE}/${HMI_IMAGE}"
     }
   }
 }

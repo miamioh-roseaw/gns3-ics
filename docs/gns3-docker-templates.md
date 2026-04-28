@@ -6,7 +6,7 @@ Build the images on the GNS3 host:
 docker compose build
 ```
 
-Then create two GNS3 Docker templates.
+Then create three GNS3 Docker templates.
 
 ## PLC Template
 
@@ -49,6 +49,29 @@ IO_CONFIG=/config/io-panel.yaml
 
 Mount the local `config` directory into the container as `/config`.
 
+## HMI Template
+
+- Template type: Docker container
+- Name: `OT HMI - Modbus TCP`
+- Image: `gns3-ot-hmi:latest`
+- Adapters: `1`
+- Start command: leave default
+- Console: optional shell console
+- Exposed service: TCP `8090`
+- Suggested IP in topology: `10.10.10.40/24`
+
+Environment variables:
+
+```text
+HMI_CONFIG=/config/hmi.yaml
+HMI_IP=10.10.10.40
+PLC_HOST=10.10.10.20
+PLC_PORT=5020
+PLC_UNIT_ID=1
+```
+
+Mount the local `config` directory into the container as `/config`.
+
 ## Ignition Connection
 
 Create a Modbus TCP device in Ignition that points to the PLC node:
@@ -70,6 +93,16 @@ http://10.10.10.30:8080
 ```
 
 The top section provides instructor scenarios that modify simulated field inputs. Use it to trigger conditions such as high ambient temperature, high water pressure, an open door interlock, or an e-stop trip while students watch PLC and SCADA behavior.
+
+## HMI Panel
+
+Open the HMI in a browser:
+
+```text
+http://10.10.10.40:8090
+```
+
+Use the HMI type drop-down to switch between manufacturing, water, wastewater, and electrical grid process screens. The settings area also lets students or instructors change the HMI station IP shown on screen and the PLC IP/port used for Modbus TCP.
 
 ## Realistic Traffic Guidance
 
