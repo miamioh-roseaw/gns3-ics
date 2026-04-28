@@ -107,6 +107,8 @@ http://<hmi-static-address>:8090
 
 Use the HMI type drop-down to switch between manufacturing, water, wastewater, and electrical grid process screens. The settings area also lets students or instructors change the HMI station IP shown on screen and the PLC IP/port used for Modbus TCP.
 
+For PLC host entry in the HMI, you can enter only the last octet if the PLC is on the same /24 as the HMI. For example, if the HMI IP is `192.168.1.4`, entering `2` as the PLC host is saved as `192.168.1.2`.
+
 ## Browser Access
 
 The web interfaces listen on all container interfaces:

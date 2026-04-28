@@ -70,6 +70,19 @@ def local_ip() -> str:
         return "0.0.0.0"
 
 
+def expand_last_octet(value: str, base_ip: str) -> str:
+    value = value.strip()
+    if not value.isdigit():
+        return value
+    last_octet = int(value)
+    if last_octet < 1 or last_octet > 254:
+        return value
+    octets = base_ip.split(".")
+    if len(octets) != 4 or not all(octet.isdigit() for octet in octets):
+        return value
+    return ".".join([*octets[:3], str(last_octet)])
+
+
 def load_config() -> dict[str, Any]:
     if not CONFIG_PATH.exists():
         if DEFAULT_CONFIG_PATH.exists():
@@ -169,7 +182,10 @@ def settings():
     hmi_type = request.form.get("hmi_type", config["hmi_type"])
     config["hmi_type"] = hmi_type if hmi_type in HMI_TYPES else "water"
     config["hmi_ip"] = request.form.get("hmi_ip", config["hmi_ip"]).strip()
-    config["plc_host"] = request.form.get("plc_host", config["plc_host"]).strip()
+    config["plc_host"] = expand_last_octet(
+        request.form.get("plc_host", config["plc_host"]),
+        config["hmi_ip"],
+    )
     config["plc_port"] = int(request.form.get("plc_port", config["plc_port"]))
     config["unit_id"] = int(request.form.get("unit_id", config["unit_id"]))
     save_config(config)
