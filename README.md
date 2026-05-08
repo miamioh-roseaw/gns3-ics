@@ -70,6 +70,10 @@ The remote I/O panel supports these selectable device types:
 - Float switch
 - Proximity sensor
 
+## Water Treatment Plant Diagram
+
+An editable water treatment plant OT diagram is available in [docs/water-treatment-plant-diagram.md](docs/water-treatment-plant-diagram.md). It maps the process areas, supported sensors, Remote I/O panel, PLC, HMI, and Ignition/SCADA connections.
+
 ## Instructor Scenarios
 
 The remote I/O panel includes an instructor scenario area for injecting common process and safety issues during a lab. Presets currently include:
